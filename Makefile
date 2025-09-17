@@ -5,11 +5,11 @@ FLAGS = -maxwlur 9 -maxwlmp 1
 
 all: seq check mt
 
-seq: bin/matmul_seq bin/nbody_seq bin/stencil_seq
+seq: bin/flash_seq bin/matmul_seq bin/nbody_seq bin/stencil_seq
 
-check: bin/matmul_check bin/stencil_check
+check: bin/flash_check bin/matmul_check bin/stencil_check
 
-mt: bin/matmul_mt bin/nbody_mt bin/stencil_mt
+mt: bin/flash_mt bin/matmul_mt bin/nbody_mt bin/stencil_mt
 
 bin/%_seq: src/%.sac
 	$(SAC) $(FLAGS) $< -o $@

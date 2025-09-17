@@ -1,0 +1,58 @@
+use Array: all;
+use CommandLine: all;
+use StdIO: all;
+
+inline
+float l2norm(float[d:shp] arr)
+{
+    return Math::sqrt(sum(arr * arr));
+}
+
+inline
+float[m,n] stabilise(float[m,n] x)
+{
+    return { [i] -> x[i] - maxval(x[i]) | [i] < [m] };
+}
+
+inline
+float[m,n] exp(float[m,n] x)
+{
+    return { iv -> Math::exp(x[iv]) | iv < [m,n] };
+}
+
+inline
+float[m,n] scale(float[m,n] x)
+{
+    return { [i] -> x[i] / sum(x[i]) | [i] < [m] };
+}
+
+inline
+float[m,n] matmulT(float[m,k] a, float[n,k] bT)
+{
+    return { [i,j] -> sum(a[i] * bT[j]) | [i,j] < [m,n] };
+}
+
+float[ND,D,D] FlashAttention(float[ND,D,D] Q, float[N,D] K, float[N,D] V)
+    | (ND == N / D)
+{
+    Vt = transpose(V);
+    return { [i] -> matmulT(scale(exp(stabilise(matmulT(Q[i], K)))), Vt)
+           | [i] < [ND] };
+}
+
+int main()
+{
+    N = String::toi(argv(argc() - 2));
+    D = String::toi(argv(argc() - 1));
+
+    Q = { [i,j,k] -> 1f / (1f + tof(i)) | [i,j,k] < [N/D,D,D] };
+    K = { [i,j] -> 1f | [i,j] < [N,D] };
+    V = { [i,j] -> 1f | [i,j] < [N,D] };
+
+    O = FlashAttention(Q, K, V);
+
+    fprintf(stderr, "L2 norm of output is %f, should be %f\n",
+            l2norm(O), Math::sqrt(tof(D * N)));
+
+    return 0;
+}
