@@ -1,6 +1,3 @@
 {
-  "image": "sacbase/sac-compiler",
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
-  ]
+  "image": "sacbase/sac-compiler"
 }
