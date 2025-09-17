@@ -1,0 +1,23 @@
+use Array: all;
+use CommandLine: all;
+use StdIO: all;
+
+double[m,n] matmul(double[m,k] a, double[k,n] b)
+{
+    bT = transpose(b);
+    return { [i,j] -> sum(a[i] * bT[j]) | [i,j] < [m,n] };
+}
+
+int main()
+{
+    N = String::toi(argv(argc() - 1));
+
+    a = tod(reshape([N,N], iota(N*N)));
+    b = tod(reshape([N,N], iota(N*N)));
+
+    c = matmul(a, b);
+
+    fprintf(stderr, "c[0,0] is %lf\n", c[0,0]);
+
+    return 0;
+}

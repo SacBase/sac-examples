@@ -1,0 +1,33 @@
+use Array: all;
+use CommandLine: all;
+use StdIO: all;
+
+specialize double[.,.] stencil(double[.,.] arr, double[3,3] w);
+
+double[2:shp] stencil(double[2:shp] arr, double[n,n] w)
+{
+     return { iv -> sum({
+                ov -> w[ov] * arr[mod(iv + ov - n/2, shp)] })
+            | iv < shp };
+}
+
+int main()
+{
+    N = String::toi(argv(argc() - 2));
+    ITER = String::toi(argv(argc() - 1));
+
+    arr = tod(reshape([N,N], iota(N*N)));
+
+    w = [[1.0, 2.0, 1.0],
+         [2.0, 4.0, 2.0],
+         [1.0, 2.0, 1.0]];
+    w /= sum(w);
+
+    for (i = 0; i < ITER; i += 1) {
+        arr = stencil(arr, w);
+    }
+
+    fprintf(stderr, "arr[0,0] is %lf\n", arr[0,0]);
+
+    return 0;
+}

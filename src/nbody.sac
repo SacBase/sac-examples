@@ -1,0 +1,100 @@
+#define OVERLOADED +,-,*
+use Array: all except { OVERLOADED };
+import Array: { OVERLOADED };
+use CommandLine: all;
+use StdIO: all;
+
+#define EPSILON 0x1p-53
+
+struct Body {
+   struct Vec3d pos;
+   struct Vec3d vel;
+   double mass;
+};
+
+struct Vec3d {
+    double x;
+    double y;
+    double z;
+};
+
+inline
+struct Vec3d -(struct Vec3d a, struct Vec3d b)
+{
+    return Vec3d{ a.x - b.x, a.y - b.y, a.z - b.z };
+}
+
+inline
+struct Vec3d +(struct Vec3d a, struct Vec3d b)
+{
+    return Vec3d{ a.x + b.x, a.y + b.y, a.z + b.z };
+}
+
+inline
+struct Vec3d[d:shp] +(struct Vec3d[d:shp] a, struct Vec3d[d:shp] b)
+{
+    return { iv ->  _sel_VxA_(iv, a) + _sel_VxA_(iv, b) | iv < shp };
+}
+
+inline
+struct Vec3d *(struct Vec3d a, double d)
+{
+    return Vec3d{ a.x * d, a.y * d, a.z * d };
+}
+
+inline
+struct Vec3d[d:shp] *(struct Vec3d[d:shp] a, double b)
+{
+    return { iv -> _sel_VxA_(iv, a) * b | iv < shp };
+}
+
+inline
+double pow3(double x)
+{
+    return x * x * x;
+}
+
+inline
+double l2norm(struct Vec3d a)
+{
+    return Math::sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+}
+
+inline
+struct Vec3d acc(struct Body b, struct Body b2)
+{
+   dir = b2.pos - b.pos;
+   return dir * (b2.mass / pow3(EPSILON + l2norm(dir)));
+}
+
+struct Body[n] timestep(struct Body[n] bodies, double dt)
+{
+    acc = with {
+        ([0] <= iv < [n]) : with {
+            ([0] <= jv < [n]): acc(_sel_VxA_(iv, bodies), _sel_VxA_(jv, bodies));
+        } : fold(+, Vec3d{});
+    } : genarray([n], Vec3d{});
+
+    bodies.vel += acc * dt;
+    bodies.pos += bodies.vel * dt;
+    return bodies;
+}
+
+int main()
+{
+    N = String::toi(argv(argc() - 2));
+    ITER = String::toi(argv(argc() - 1));
+
+    bodies = { [i] -> Body { .pos = Vec3d{ tod(i), tod(2*i), tod(3*i) },
+                             .vel = Vec3d{},
+                             .mass = 1d }
+             | [i] < [N] };
+
+    for (i = 0; i < ITER; i += 1) {
+        bodies = timestep(bodies, 0.01);
+    }
+
+    fprintf(stderr, "bodies[0].pos.x is %lf\n", _sel_VxA_([0], bodies).pos.x);
+
+    return 0;
+}
