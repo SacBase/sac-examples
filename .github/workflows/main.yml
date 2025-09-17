@@ -6,7 +6,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: sacbase/sac-compiler:latest
+      image: sacbase/sac-compiler
     steps:
       - uses: actions/checkout@v5
-      - run: test.sh
+      - run: ./test.sh
