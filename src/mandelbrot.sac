@@ -1,0 +1,67 @@
+use Structures: all;
+use CommandLine: all;
+use StdIO: all;
+
+#define DEPTH 2048
+
+inline
+complex[yres,xres] genComplexArray(int xres, int yres, complex cmin, complex cmax)
+{
+    dR = real(cmax) - real(cmin);
+    dI = imag(cmax) - imag(cmin);
+    return { [y,x] -> cmin + toc((tod(x) / tod(xres)) * dR,
+                                 (tod(y) / tod(yres)) * dI)
+           | [y,x] < [yres,xres] };
+}
+
+inline
+int, complex escapeTimeAndValue(complex c, int depth)
+{
+    time = 0;
+    z = c;
+
+    while (time < depth && normSq(z) <= 4d) {
+        z = z * z + c;
+        time += 1;
+    }
+
+    return (time, z);
+}
+
+inline
+int[2:shp], complex[2:shp] escapeTimeAndValue(complex[2:shp] arr, int depth)
+{
+    times, values = { iv -> escapeTimeAndValue (arr[iv], depth) | iv < shp };
+    return (times, values);
+}
+
+inline
+double[2:shp] normalizeValues(int[2:shp] times, complex[2:shp] values)
+{
+    return where(normSq(values) <= 4d,
+                 0d,
+                 tod(times + 1) - MathArray::log2(MathArray::log2(norm(values))));
+}
+
+inline
+Color8[2:shp] planeToRbg(double[2:shp] arr)
+{
+    scaled = toi(arr * 360d) % 360;
+    return Hsb2Rgb(scaled, 60, 80);
+}
+
+int main()
+{
+    XRES = String::toi(argv(argc() - 2));
+    YRES = String::toi(argv(argc() - 1));
+
+    plane = genComplexArray(XRES, YRES, toc(-2.2, 1.0), toc(0.8, -1.0));
+    ts, vs = escapeTimeAndValue(plane, DEPTH);
+    nvs = normalizeValues(ts, vs);
+    color = planeToRbg(nvs);
+
+    r, g, b = rgb(color[0,0]);
+    fprintf(stderr, "color[0,0] is (%lf, %lf, %lf)\n", r, g, b);
+
+    return 0;
+}

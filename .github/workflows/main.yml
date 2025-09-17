@@ -9,4 +9,8 @@ jobs:
       image: sacbase/sac-compiler
     steps:
       - uses: actions/checkout@v5
-      - run: ./test.sh
+      - run: |
+          ls
+          echo $PWD
+          sac2c -V
+          ./test.sh

@@ -1,15 +1,15 @@
 SAC ?= sac2c
 FLAGS = -maxwlur 9 -maxwlmp 1
 
-.PHONY: all clean seq checks mt
+.PHONY: all seq check mt clean
 
 all: seq check mt
 
-seq: bin/flash_seq bin/matmul_seq bin/nbody_seq bin/stencil_seq
+seq: bin/flash_seq bin/mandelbrot_seq bin/matmul_seq bin/nbody_seq bin/stencil_seq
 
-check: bin/flash_check bin/matmul_check bin/stencil_check
+check: bin/flash_check bin/mandelbrot_check bin/matmul_check bin/stencil_check
 
-mt: bin/flash_mt bin/matmul_mt bin/nbody_mt bin/stencil_mt
+mt: bin/flash_mt bin/mandelbrot_mt bin/matmul_mt bin/nbody_mt bin/stencil_mt
 
 bin/%_seq: src/%.sac
 	$(SAC) $(FLAGS) $< -o $@
