@@ -9,9 +9,6 @@ jobs:
       image: sacbase/sac-compiler
     steps:
       - uses: actions/checkout@v5
-      - run: echo "/root/.sac2crc" >> $GITHUB_PATH
-      - run: cd /sac2c/build_p && make install
-      - run: cd /sac-stdlib/build && make install
       - run: |
           ls
           echo $PWD
