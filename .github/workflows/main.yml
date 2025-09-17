@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: echo "/root/.sac2crc" >> $GITHUB_PATH
-      - run: cd /sac-stdlib/build make install
+      - run: cd /sac-stdlib/build && make install
       - run: |
           ls
           echo $PWD
