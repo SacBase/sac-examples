@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: sacbase/sac-compiler
-      options: --user node:node
     steps:
       - uses: actions/checkout@v5
       - run: mv /root/.sac2crc $HOME/.sac2crc
