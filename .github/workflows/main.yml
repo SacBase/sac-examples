@@ -14,4 +14,5 @@ jobs:
           ls
           echo $PWD
           sac2c -V
+          whoami
           ./test.sh
