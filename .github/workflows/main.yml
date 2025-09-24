@@ -7,12 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: sacbase/sac-compiler
-      options: --user root
     steps:
       - uses: actions/checkout@v5
       - run: |
-          ls
+          ls -la
+          ls -la ~
+          ls -la /root
+          ls -la /root/.sac2crc
+          cat /root/.sac2crc/sac2crc.package.stdlib
+          cat /root/.sac2crc/sac2crc.release.prelude
           echo $PWD
           sac2c -V
           whoami
+          echo $PATH
           ./test.sh
