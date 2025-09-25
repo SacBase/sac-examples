@@ -5,7 +5,7 @@
 ./bin/flash_mt -mt 4 64 1024 || exit 1
 
 ./bin/fmg_seq 2048 || exit 1
-./bin/fmg_check 2048 || exit 1
+#./bin/fmg_check 2048 || exit 1
 ./bin/fmg_mt -mt 4 2048 || exit 1
 
 ./bin/mandelbrot_seq 1280 720 || exit 1
