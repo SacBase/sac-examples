@@ -65,73 +65,73 @@ double[n2,m2], double[n2,m2] restrict_rb(double[n,m] x_red, double[n,m] x_black)
     y = with {
             ([0,0] <= [i,j] < [n/2,n/2]):
                 (x_black[2 * i, j] +
-                    0.50 * (x_red[mod([2 * i - 1, m - 1 - j], [n, m])] +
-                            x_red[mod([2 * i    , j        ], [n, m])] +
-                            x_red[mod([2 * i    , j - 1    ], [n, m])] +
-                            x_red[mod([2 * i + 1, m - 1 - j], [n, m])]) +
-                    0.25 * (x_black[mod([2 * i - 1, m - 1 - j], [n, m])] +
-                            x_black[mod([2 * i - 1, m     - j], [n, m])] +
-                            x_black[mod([2 * i + 1, m - 1 - j], [n, m])] +
-                            x_black[mod([2 * i + 1, m     - j], [n, m])])
+                    0.50 * (x_red[mod([2 * i - 1, m - 1 - j], [n,m])] +
+                            x_red[mod([2 * i    , j        ], [n,m])] +
+                            x_red[mod([2 * i    , j - 1    ], [n,m])] +
+                            x_red[mod([2 * i + 1, m - 1 - j], [n,m])]) +
+                    0.25 * (x_black[mod([2 * i - 1, m - 1 - j], [n,m])] +
+                            x_black[mod([2 * i - 1, m     - j], [n,m])] +
+                            x_black[mod([2 * i + 1, m - 1 - j], [n,m])] +
+                            x_black[mod([2 * i + 1, m     - j], [n,m])])
                 ) / 4d;
         }: genarray([n / 2, n / 2], 0d);
 
-    y_black = {[i, j] -> y[i, 2 * j]
-                        | [0, 0] <= [i, j] < [n / 2, n / 4] step [2, 1];
-                [i, j] -> y[i, n / 2 - 2 * j - 1]
-                        | [1, 0] <= [i, j] < [n / 2, n / 4] step [2, 1]};
+    y_black = { [i,j] -> y[i, 2 * j]
+                        | [0, 0] <= [i,j] < [n / 2, n / 4] step [2, 1];
+                [i,j] -> y[i, n / 2 - 2 * j - 1]
+                        | [1, 0] <= [i,j] < [n / 2, n / 4] step [2, 1] };
 
-    y_red   = {[i, j] -> y[i, 2 * j + 1]
-                        | [0, 0] <= [i, j] < [n / 2, n / 4] step [2, 1];
-                [i, j] -> y[i, n / 2 - 2 * (j + 1)]
-                        | [1, 0] <= [i, j] < [n / 2, n / 4] step [2, 1]};
+    y_red   = { [i,j] -> y[i, 2 * j + 1]
+                        | [0, 0] <= [i,j] < [n / 2, n / 4] step [2, 1];
+                [i,j] -> y[i, n / 2 - 2 * (j + 1)]
+                        | [1, 0] <= [i,j] < [n / 2, n / 4] step [2, 1] };
     return (y_red, y_black);
 }
 
 double[n,n2], double[n,n2] to_red_black(double[n,n] x)
     | (n2 == n / 2)
 {
-    black = {[i, j] -> x[i, 2 * j]
-                    | [0, 0] <= [i, j] < [n, n / 2] step [2, 1];
-            [i, j] -> x[i, n - 2 * j - 1]
-                    | [1, 0] <= [i, j] < [n, n / 2] step [2, 1]};
+    black = { [i,j] -> x[i, 2 * j]
+                    | [0, 0] <= [i,j] < [n, n / 2] step [2, 1];
+            [i,j] -> x[i, n - 2 * j - 1]
+                    | [1, 0] <= [i,j] < [n, n / 2] step [2, 1] };
 
-    red   = {[i, j] -> x[i, 2 * j + 1]
-                    | [0, 0] <= [i, j] < [n, n / 2] step [2, 1];
-            [i, j] -> x[i, n - 2 * (j + 1)]
-                    | [1, 0] <= [i, j] < [n, n / 2] step [2, 1]};
+    red   = { [i,j] -> x[i, 2 * j + 1]
+                    | [0, 0] <= [i,j] < [n, n / 2] step [2, 1];
+            [i,j] -> x[i, n - 2 * (j + 1)]
+                    | [1, 0] <= [i,j] < [n, n / 2] step [2, 1] };
 
     return (red, black);
 }
 
 inline
-double[n, n] from_red_black(double[n, n2] red, double[n, n2] black)
-  | (n2 == n / 2)
+double[n,n] from_red_black(double[n,n2] red, double[n,n2] black)
+    | (n2 == n / 2)
 {
     return with {
             ([0,0] <= [i,j] < [n,n] step [2,2]): black[i,(j)/2    ];
             ([0,1] <= [i,j] < [n,n] step [2,2]): red  [i,(j)/2    ];
             ([1,0] <= [i,j] < [n,n] step [2,2]): red  [i,(n-j-1)/2];
             ([1,1] <= [i,j] < [n,n] step [2,2]): black[i,(n-j)/2  ];
-        }: genarray([n, n], 0d);
+        }: genarray([n,n], 0d);
 }
 
 inline
 double[n,n2], double[n,n2] stencil_rb(double[n,n2] x_red, double[n,n2] x_black, double[2] w)
 {
   res_black = w[0] * x_black +
-              w[1] * {[i, j] -> x_red[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                x_red[mod([i    , j         ], [n, n2])] +
-                                x_red[mod([i    , j  - 1    ], [n, n2])] +
-                                x_red[mod([i + 1, n2 - 1 - j], [n, n2])]
-                              | [i, j] < [n, n2]};
+              w[1] * { [i,j] -> x_red[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                x_red[mod([i    , j         ], [n,n2])] +
+                                x_red[mod([i    , j  - 1    ], [n,n2])] +
+                                x_red[mod([i + 1, n2 - 1 - j], [n,n2])]
+                              | [i,j] < [n,n2] };
 
   res_red   = w[0] * x_red +
-              w[1] * {[i, j] -> x_black[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                x_black[mod([i    , j         ], [n, n2])] +
-                                x_black[mod([i    , j  + 1    ], [n, n2])] +
-                                x_black[mod([i + 1, n2 - 1 - j], [n, n2])]
-                              | [i, j] < [n, n2]};
+              w[1] * { [i,j] -> x_black[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                x_black[mod([i    , j         ], [n,n2])] +
+                                x_black[mod([i    , j  + 1    ], [n,n2])] +
+                                x_black[mod([i + 1, n2 - 1 - j], [n,n2])]
+                              | [i,j] < [n,n2] };
 
   return (res_red, res_black);
 }
@@ -140,28 +140,28 @@ inline
 double[n,n2], double[n,n2] stencil_rb(double[n,n2] x_red, double[n,n2] x_black, double[3] w)
 {
     res_black = w[0] * x_black +
-                w[1] * {[i, j] -> x_red[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                    x_red[mod([i    , j         ], [n, n2])] +
-                                    x_red[mod([i    , j  - 1    ], [n, n2])] +
-                                    x_red[mod([i + 1, n2 - 1 - j], [n, n2])]
-                                | [i, j] < [n, n2]} +
-                w[2] * {[i, j] -> x_black[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                    x_black[mod([i - 1, n2     - j], [n, n2])] +
-                                    x_black[mod([i + 1, n2 - 1 - j], [n, n2])] +
-                                    x_black[mod([i + 1, n2     - j], [n, n2])]
-                                | [i, j] < [n, n2]};
+                w[1] * { [i,j] -> x_red[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                    x_red[mod([i    , j         ], [n,n2])] +
+                                    x_red[mod([i    , j  - 1    ], [n,n2])] +
+                                    x_red[mod([i + 1, n2 - 1 - j], [n,n2])]
+                                | [i,j] < [n,n2] } +
+                w[2] * { [i,j] -> x_black[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                    x_black[mod([i - 1, n2     - j], [n,n2])] +
+                                    x_black[mod([i + 1, n2 - 1 - j], [n,n2])] +
+                                    x_black[mod([i + 1, n2     - j], [n,n2])]
+                                | [i,j] < [n,n2] };
 
     res_red   = w[0] * x_red +
-                w[1] * {[i, j] -> x_black[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                    x_black[mod([i    , j         ], [n, n2])] +
-                                    x_black[mod([i    , j  + 1    ], [n, n2])] +
-                                    x_black[mod([i + 1, n2 - 1 - j], [n, n2])]
-                                | [i, j] < [n, n2]} +
-                w[2] * {[i, j] -> x_red[mod([i - 1, n2 - 1 - j], [n, n2])] +
-                                    x_red[mod([i - 1, n2 - 2 - j], [n, n2])] +
-                                    x_red[mod([i + 1, n2 - 1 - j], [n, n2])] +
-                                    x_red[mod([i + 1, n2 - 2 - j], [n, n2])]
-                                | [i, j] < [n, n2]};
+                w[1] * { [i,j] -> x_black[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                    x_black[mod([i    , j         ], [n,n2])] +
+                                    x_black[mod([i    , j  + 1    ], [n,n2])] +
+                                    x_black[mod([i + 1, n2 - 1 - j], [n,n2])]
+                                | [i,j] < [n,n2] } +
+                w[2] * { [i,j] -> x_red[mod([i - 1, n2 - 1 - j], [n,n2])] +
+                                    x_red[mod([i - 1, n2 - 2 - j], [n,n2])] +
+                                    x_red[mod([i + 1, n2 - 1 - j], [n,n2])] +
+                                    x_red[mod([i + 1, n2 - 2 - j], [n,n2])]
+                                | [i,j] < [n,n2] };
 
     return (res_red, res_black);
 }
@@ -175,40 +175,36 @@ inline
 double[n,m], double[n,m] sor(double[n,m] u_red, double[n,m] u_black,
                              double[n,m] f_red, double[n,m] f_black,
                              double h, double omega)
-    | (n == 2 * m && m % 2 == 0)
+    | (n == 2 * m), (m % 2 == 0)
 {
-    update_red = {[i, j] -> u_red[mod([i - 1, m - 1 - j], [n, m])] +
-                            u_red[mod([i    , j        ], [n, m])] +
-                            u_red[mod([i    , j - 1    ], [n, m])] +
-                            u_red[mod([i + 1, m - 1 - j], [n, m])]
-                        | [i, j] < [n, m]};
+    update_red = { [i,j] -> u_red[mod([i-1,m-1-j], [n,m])] +
+                            u_red[mod([i  ,j    ], [n,m])] +
+                            u_red[mod([i  ,j-1  ], [n,m])] +
+                            u_red[mod([i+1,m-1-j], [n,m])]
+                 | [i,j] < [n,m] };
 
-    u_black = (1d - omega) * u_black +
-                omega / 4d * (update_red - h * h * f_black);
+    u_black = (1d - omega) * u_black + omega / 4d * (update_red - h * h * f_black);
 
-    update_black = {[i, j] -> u_black[mod([i - 1, m - 1 - j], [n, m])] +
-                                u_black[mod([i    , j        ], [n, m])] +
-                                u_black[mod([i    , j + 1    ], [n, m])] +
-                                u_black[mod([i + 1, m - 1 - j], [n, m])]
-                            | [i, j] < [n, m]};
+    update_black = { [i,j] -> u_black[mod([i-1,m-1-j], [n,m])] +
+                              u_black[mod([i  ,j    ], [n,m])] +
+                              u_black[mod([i  ,j+1  ], [n,m])] +
+                              u_black[mod([i+1,m-1-j], [n,m])]
+                   | [i,j] < [n,m] };
 
-    u_red = (1d - omega) * u_red +
-            omega / 4d * (update_black - h * h * f_red);
+    u_red = (1d - omega) * u_red + omega / 4d * (update_black - h * h * f_red);
 
     return (u_red, u_black);
 }
 
 inline
 double[n,m], double[n,m] sor_solve(double[n,m] f_red, double[n,m] f_black, double h, int max_iter)
-    | (n == 2 * m && m % 2 == 0)
+    | (n == 2 * m), (m % 2 == 0)
 {
-    u_red   = {iv -> 0d | iv < [n, m]};
-    u_black = {iv -> 0d | iv < [n, m]};
+    u_red   = { iv -> 0d | iv < [n,m] };
+    u_black = { iv -> 0d | iv < [n,m] };
+    omega = 2d / (1d + sin(pi() * h));
 
-    pi    = 4d * atan(1d);
-    omega = 2d / (1d + sin(pi * h));
-
-    for (t = 0; t < max_iter; t++) {
+    for (t = 0; t < max_iter; t += 1) {
         u_red, u_black = sor(u_red, u_black, f_red, f_black, h, omega);
     }
 
@@ -268,24 +264,23 @@ double[n,n2], double[n,n2] v_cycle(double[n,n2] U_red, double[n,n2] U_black,
 }
 
 noinline
-double[n, n2] , double[n, n2]
-fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
+double[n,n2], double[n,n2] fmg(double[n,n2] F_red, double[n,n2] F_black, double h)
 {
     a = 0d;
     b = 2d * pi();
-
     small_n = 128;
-    factor  = n / small_n;
+    factor = n / small_n;
     small_h = h * tod(factor);
 
-    small_F_black = {[i, j] -> F_black[i * factor, j * factor]
-                            | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                     [i, j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
-                            | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
-    small_F_red   = {[i, j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
-                             | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                      [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
-                             | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
+    small_F_black = { [i,j] -> F_black[i * factor, j * factor]
+                                | [0,0] <= [i,j] < [small_n,small_n/2] step [2,1];
+                      [i,j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
+                                | [1,0] <= [i,j] < [small_n,small_n/2] step [2,1] };
+
+    small_F_red = { [i,j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
+                                | [0, 0] <= [i,j] < [small_n,small_n/2] step [2,1];
+                    [i,j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
+                                | [1, 0] <= [i,j] < [small_n,small_n/2] step [2,1] };
 
     /* spectral_radius approx 1, so log is not stable */
     log_spectral_radius = log1p(-2d * sin(pi() * small_h) /
@@ -298,37 +293,33 @@ fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
     do {
       small_n *= 2;
       small_h /= 2d;
-      factor  /= 2;
+      factor /= 2;
 
-      small_F_black = {[i, j] -> F_black[i * factor, j * factor]
-                              | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                       [i, j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
-                              | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
-      small_F_red   = {[i, j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
-                               | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                        [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
-                               | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
+      small_F_black = { [i,j] -> F_black[i * factor, j * factor]
+                                | [0, 0] <= [i,j] < [small_n, small_n / 2] step [2, 1];
+                        [i,j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
+                                | [1, 0] <= [i,j] < [small_n, small_n / 2] step [2, 1] };
+      small_F_red = { [i,j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
+                                | [0, 0] <= [i,j] < [small_n, small_n / 2] step [2, 1];
+                      [i,j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
+                                | [1, 0] <= [i,j] < [small_n, small_n / 2] step [2, 1] };
 
       U_red, U_black = prolongate_rb(U_red, U_black);
-      U_red, U_black = v_cycle(U_red, U_black,
-                               small_F_red, small_F_black,
-                               small_h);
+      U_red, U_black = v_cycle(U_red, U_black, small_F_red, small_F_black, small_h);
     } while (small_n < n / 2);
 
     U_red, U_black = prolongate_rb(U_red, U_black);
     U_red, U_black = v_cycle(U_red, U_black, F_red, F_black, h);
-
     return (U_red, U_black);
 }
 
 int main()
 {
-    pi = 4d * atan(1d);
     a = 0d;
-    b = 2d * pi;
+    b = 2d * pi();
     h = (b - a) / tod(N);
 
-    F = { [i,j] -> f(a + tod(i) * h, a + tod(j) * h) | [i,j] < [N,N]};
+    F = { [i,j] -> f(a + tod(i) * h, a + tod(j) * h) | [i,j] < [N,N] };
     F_red, F_black = to_red_black(F);
 
     sec1, nsec1 = MTClock::gettime();
@@ -340,7 +331,7 @@ int main()
     gb_needed = 1.333 * 4d * 8d * tod(N) * tod(N) * 1e-9;
     printf("This took %fs at effective bandwidth %fGB/s\n", time, gb_needed / time);
 
-    Utrue = { [i,j] -> u(a + tod(i) * h, a + tod(j) * h) | [i,j] < [N,N]};
+    Utrue = { [i,j] -> u(a + tod(i) * h, a + tod(j) * h) | [i,j] < [N,N] };
     Utrue_red, Utrue_black = to_red_black(Utrue);
     err = L2_rb(U_red - Utrue_red, U_black - Utrue_black)
         / L2_rb(Utrue_red, Utrue_black);
