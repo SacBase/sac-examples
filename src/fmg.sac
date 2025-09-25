@@ -8,10 +8,11 @@
  * red-black ordering.
  **/
 
-use StdIO: all;
 use Math: all;
 use Structures: all;
 use Benchmarking: all;
+use CommandLine: all;
+use StdIO: all;
 
 double f(double x, double y)
 {
