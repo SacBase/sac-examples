@@ -63,10 +63,9 @@ int main()
     nvs = normalizeValues(ts, vs);
 
     sec2, nsec2 = MTClock::gettime();
-
+    printf("This took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
     printf("nvs[0,0] is %f\n", nvs[0,0]);
     printf("nvs[%d,%d] is %f\n", XRES/2, YRES/2, nvs[XRES/2,YRES/2]);
-    printf("this took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
 
     return 0;
 }

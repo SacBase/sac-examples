@@ -61,9 +61,8 @@ int main()
     O = FlashAttention(Q, K, V);
 
     sec2, nsec2 = MTClock::gettime();
-
+    printf("This took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
     printf("l2norm is %f, should be %f\n", l2norm(O), Math::sqrt(tof(D*N)));
-    printf("this took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
 
     return 0;
 }
