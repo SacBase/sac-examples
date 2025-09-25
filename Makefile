@@ -6,21 +6,21 @@ FLAGS = -maxwlur 9 -maxwlmp 1
 all: seq check mt
 
 seq: \
-	bin/flash_seq \
-	bin/fmg_seq \
-	bin/mandelbrot_seq \
-	bin/matmul_seq \
-	bin/nbody_seq \
-	bin/quickhull_seq \
-	bin/stencil_seq
+	bin/flash \
+	bin/fmg \
+	bin/mandelbrot \
+	bin/matmul \
+	bin/nbody \
+	bin/quickhull \
+	bin/stencil
 
 check: \
-	bin/flash_check \
-	bin/fmg_check \
-	bin/mandelbrot_check \
-	bin/matmul_check \
-	bin/quickhull_check \
-	bin/stencil_check
+	bin/flash_p \
+	bin/fmg_p \
+	bin/mandelbrot_p \
+	bin/matmul_p \
+	bin/quickhull_p \
+	bin/stencil_p
 
 mt: \
 	bin/flash_mt \
@@ -31,10 +31,10 @@ mt: \
 	bin/quickhull_mt \
 	bin/stencil_mt
 
-bin/%_seq: src/%.sac
+bin/%: src/%.sac
 	$(SAC) $(FLAGS) $< -o $@
 
-bin/%_check: src/%.sac
+bin/%_p: src/%.sac
 	$(SAC) $(FLAGS) -check p $< -o $@
 
 bin/%_mt: src/%.sac

@@ -1,8 +1,14 @@
 use Structures: all;
-use CommandLine: all;
 use StdIO: all;
 
+#ifndef XRES
+#define XRES 1920
+#define YRES 1080
+#endif
+
+#ifndef DEPTH
 #define DEPTH 2048
+#endif
 
 inline
 complex[yres,xres] genComplexArray(int xres, int yres, complex cmin, complex cmax)
@@ -28,40 +34,39 @@ int, complex escapeTimeAndValue(complex c, int depth)
     return (time, z);
 }
 
-inline
+noinline
 int[2:shp], complex[2:shp] escapeTimeAndValue(complex[2:shp] arr, int depth)
 {
-    times, values = { iv -> escapeTimeAndValue (arr[iv], depth) | iv < shp };
-    return (times, values);
+    MTClock::touch();
+
+    ts, vs = { iv -> escapeTimeAndValue(arr[iv], depth) | iv < shp };
+    return (ts, vs);
 }
 
-inline
-double[2:shp] normalizeValues(int[2:shp] times, complex[2:shp] values)
+noinline
+double[2:shp] normalizeValues(int[2:shp] ts, complex[2:shp] vs)
 {
-    return where(normSq(values) <= 4d,
+    MTClock::touch();
+
+    return where(normSq(vs) <= 4d,
                  0d,
-                 tod(times + 1) - MathArray::log2(MathArray::log2(norm(values))));
-}
-
-inline
-Color8[2:shp] planeToRbg(double[2:shp] arr)
-{
-    scaled = toi(arr * 360d) % 360;
-    return Hsb2Rgb(scaled, 60, 80);
+                 tod(ts + 1) - MathArray::log2(MathArray::log2(norm(vs))));
 }
 
 int main()
 {
-    XRES = String::toi(argv(argc() - 2));
-    YRES = String::toi(argv(argc() - 1));
+    arr = genComplexArray(XRES, YRES, toc(-2.2, 1.0), toc(0.8, -1.0));
 
-    plane = genComplexArray(XRES, YRES, toc(-2.2, 1.0), toc(0.8, -1.0));
-    ts, vs = escapeTimeAndValue(plane, DEPTH);
+    sec1, nsec1 = MTClock::gettime();
+
+    ts, vs = escapeTimeAndValue(arr, DEPTH);
     nvs = normalizeValues(ts, vs);
-    color = planeToRbg(nvs);
 
-    r, g, b = rgb(color[0,0]);
-    fprintf(stderr, "color[0,0] is (%lf, %lf, %lf)\n", r, g, b);
+    sec2, nsec2 = MTClock::gettime();
+
+    printf("nvs[0,0] is %f\n", nvs[0,0]);
+    printf("nvs[%d,%d] is %f\n", XRES/2, YRES/2, nvs[XRES/2,YRES/2]);
+    printf("this took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
 
     return 0;
 }

@@ -1,10 +1,17 @@
 #define OVERLOADED +,-,*
 use Array: all except { OVERLOADED };
 import Array: { OVERLOADED };
-use CommandLine: all;
 use StdIO: all;
 
 #define EPSILON 0x1p-53
+
+#ifndef N
+#define N 1000
+#endif
+
+#ifndef ITER
+#define ITER 100
+#endif
 
 struct Body {
    struct Vec3d pos;
@@ -67,8 +74,11 @@ struct Vec3d acc(struct Body b, struct Body b2)
    return dir * (b2.mass / pow3(EPSILON + l2norm(dir)));
 }
 
+noinline
 struct Body[n] timestep(struct Body[n] bodies, double dt)
 {
+    MTClock::touch();
+
     acc = with {
         ([0] <= iv < [n]) : with {
             ([0] <= jv < [n]): acc(_sel_VxA_(iv, bodies), _sel_VxA_(jv, bodies));
@@ -82,19 +92,21 @@ struct Body[n] timestep(struct Body[n] bodies, double dt)
 
 int main()
 {
-    N = String::toi(argv(argc() - 2));
-    ITER = String::toi(argv(argc() - 1));
-
     bodies = { [i] -> Body { .pos = Vec3d{ tod(i), tod(2*i), tod(3*i) },
                              .vel = Vec3d{},
                              .mass = 1d }
              | [i] < [N] };
 
+    sec1, nsec1 = MTClock::gettime();
+
     for (i = 0; i < ITER; i += 1) {
         bodies = timestep(bodies, 0.01);
     }
 
-    fprintf(stderr, "bodies[0].pos.x is %lf\n", _sel_VxA_([0], bodies).pos.x);
+    sec2, nsec2 = MTClock::gettime();
+
+    printf("bodies[0].pos.x is %f\n", _sel_VxA_([0], bodies).pos.x);
+    printf("this took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
 
     return 0;
 }

@@ -1,6 +1,13 @@
 use Array: all;
-use CommandLine: all;
 use StdIO: all;
+
+#ifndef N
+#define N 2048
+#endif
+
+#ifndef D
+#define D 128
+#endif
 
 inline
 float l2norm(float[d:shp] arr)
@@ -32,27 +39,31 @@ float[m,n] matmulT(float[m,k] a, float[n,k] bT)
     return { [i,j] -> sum(a[i] * bT[j]) | [i,j] < [m,n] };
 }
 
-float[ND,D,D] FlashAttention(float[ND,D,D] Q, float[N,D] K, float[N,D] V)
-    | (ND == N / D)
+noinline
+float[nd,d,d] FlashAttention(float[nd,d,d] Q, float[n,d] K, float[n,d] V)
+    | (nd == n / d)
 {
+    MTClock::touch();
+
     Vt = transpose(V);
     return { [i] -> matmulT(scale(exp(stabilise(matmulT(Q[i], K)))), Vt)
-           | [i] < [ND] };
+           | [i] < [nd] };
 }
 
 int main()
 {
-    N = String::toi(argv(argc() - 2));
-    D = String::toi(argv(argc() - 1));
-
     Q = { [i,j,k] -> 1f / (1f + tof(i)) | [i,j,k] < [N/D,D,D] };
     K = { [i,j] -> 1f | [i,j] < [N,D] };
     V = { [i,j] -> 1f | [i,j] < [N,D] };
 
+    sec1, nsec1 = MTClock::gettime();
+
     O = FlashAttention(Q, K, V);
 
-    fprintf(stderr, "L2 norm of output is %f, should be %f\n",
-            l2norm(O), Math::sqrt(tof(D * N)));
+    sec2, nsec2 = MTClock::gettime();
+
+    printf("l2norm is %f, should be %f\n", l2norm(O), Math::sqrt(tof(D*N)));
+    printf("this took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
 
     return 0;
 }
