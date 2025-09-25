@@ -4,9 +4,9 @@
 ./bin/flash_check 64 1024 || exit 1
 ./bin/flash_mt -mt 4 64 1024 || exit 1
 
-./bin/fmt_seq || exit 1
-./bin/fmt_check || exit 1
-./bin/fmt_mt -mt 4 || exit 1
+./bin/fmt_seq 2048 || exit 1
+./bin/fmt_check 2048 || exit 1
+./bin/fmt_mt -mt 4 2048 || exit 1
 
 ./bin/mandelbrot_seq 1280 720 || exit 1
 ./bin/mandelbrot_check 1280 720 || exit 1
