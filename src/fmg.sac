@@ -25,7 +25,7 @@ double u(double x, double y)
 
 /* Interpolation */
 inline
-double[m, m2], double[m, m2] 
+double[m, m2], double[m, m2]
 prolongate_rb(double[n, n2] x_red, double[n, n2] x_black)
 {
   x = with {
@@ -59,12 +59,12 @@ prolongate_rb(double[n, n2] x_red, double[n, n2] x_black)
 
 /**
  * Full-weighting operator: for P the interpolation matrix and d the
- * dimension, restrict is P^t / 2^d. 
+ * dimension, restrict is P^t / 2^d.
  *
  * Distmem note: when x_red, x_black are distributed, but the result is not
  * (see -mindistsize), the full distributed data structures of x_red and x_black
  * are communicated, so -mindistsize should not be too big.
- **/ 
+ **/
 inline
 double[n2, m2], double[n2, m2]
 restrict_rb(double[n, m] x_red, double[n, m] x_black)
@@ -82,14 +82,14 @@ restrict_rb(double[n, m] x_red, double[n, m] x_black)
                    x_black[mod([2 * i + 1, m     - j], [n, m])])) / 4d;
       }: genarray([n / 2, n / 2], 0d);
 
-  y_black = {[i, j] -> y[i, 2 * j] 
+  y_black = {[i, j] -> y[i, 2 * j]
                     | [0, 0] <= [i, j] < [n / 2, n / 4] step [2, 1];
              [i, j] -> y[i, n / 2 - 2 * j - 1]
                     | [1, 0] <= [i, j] < [n / 2, n / 4] step [2, 1]};
 
   y_red   = {[i, j] -> y[i, 2 * j + 1]
                     | [0, 0] <= [i, j] < [n / 2, n / 4] step [2, 1];
-             [i, j] -> y[i, n / 2 - 2 * (j + 1)] 
+             [i, j] -> y[i, n / 2 - 2 * (j + 1)]
                     | [1, 0] <= [i, j] < [n / 2, n / 4] step [2, 1]};
   return (y_red, y_black);
 }
@@ -97,14 +97,14 @@ restrict_rb(double[n, m] x_red, double[n, m] x_black)
 double[n, n2], double[n, n2] to_red_black(double[n, n] x)
   | (n2 == n / 2)
 {
-  black = {[i, j] -> x[i, 2 * j] 
+  black = {[i, j] -> x[i, 2 * j]
                   | [0, 0] <= [i, j] < [n, n / 2] step [2, 1];
-           [i, j] -> x[i, n - 2 * j - 1] 
+           [i, j] -> x[i, n - 2 * j - 1]
                   | [1, 0] <= [i, j] < [n, n / 2] step [2, 1]};
 
   red   = {[i, j] -> x[i, 2 * j + 1]
                   | [0, 0] <= [i, j] < [n, n / 2] step [2, 1];
-           [i, j] -> x[i, n - 2 * (j + 1)] 
+           [i, j] -> x[i, n - 2 * (j + 1)]
                   | [1, 0] <= [i, j] < [n, n / 2] step [2, 1]};
 
   return (red, black);
@@ -127,7 +127,7 @@ double[n, n] from_red_black(double[n, n2] red, double[n, n2] black)
  * weights [w[1], w[0], w[1]] in the more general case.
  **/
 inline
-double[n, n2], double[n, n2] 
+double[n, n2], double[n, n2]
 stencil_rb(double[n, n2] x_red, double[n, n2] x_black, double[2] w)
 {
   res_black = w[0] * x_black +
@@ -143,12 +143,12 @@ stencil_rb(double[n, n2] x_red, double[n, n2] x_black, double[2] w)
                                 x_black[mod([i    , j  + 1    ], [n, n2])] +
                                 x_black[mod([i + 1, n2 - 1 - j], [n, n2])]
                               | [i, j] < [n, n2]};
- 
+
   return (res_red, res_black);
 }
 
 inline
-double[n, n2], double[n, n2] 
+double[n, n2], double[n, n2]
 stencil_rb(double[n, n2] x_red, double[n, n2] x_black, double[3] w)
 {
   res_black = w[0] * x_black +
@@ -174,7 +174,7 @@ stencil_rb(double[n, n2] x_red, double[n, n2] x_black, double[3] w)
                                 x_red[mod([i + 1, n2 - 1 - j], [n, n2])] +
                                 x_red[mod([i + 1, n2 - 2 - j], [n, n2])]
                              | [i, j] < [n, n2]};
- 
+
   return (res_red, res_black);
 }
 
@@ -242,7 +242,7 @@ specialize double[32768, 16384], double[32768, 16384] v_cycle(double[32768, 1638
 specialize double[16384, 8192], double[16384, 8192] v_cycle(double[16384, 8192] U_red, double[16384, 8192] U_black, double[16384, 8192] F_red, double[16384, 8192] F_black, double h);
 specialize double[8192, 4096], double[8192, 4096] v_cycle(double[8192, 4096] U_red, double[8192, 4096] U_black, double[8192, 4096] F_red, double[8192, 4096] F_black, double h);
 noinline
-double[n, n2] , double[n, n2] 
+double[n, n2] , double[n, n2]
 v_cycle(double[n, n2] U_red, double[n, n2] U_black,
         double[n, n2] F_red, double[n, n2] F_black, double h)
 {
@@ -275,7 +275,7 @@ v_cycle(double[n, n2] U_red, double[n, n2] U_black,
 }
 
 noinline
-double[n, n2] , double[n, n2] 
+double[n, n2] , double[n, n2]
 fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
 {
     pi = 4d * atan(1d);
@@ -286,18 +286,18 @@ fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
     factor  = n / small_n;
     small_h = h * tod(factor);
 
-    small_F_black = {[i, j] -> F_black[i * factor, j * factor] 
+    small_F_black = {[i, j] -> F_black[i * factor, j * factor]
                             | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
                      [i, j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
                             | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
     small_F_red   = {[i, j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
                              | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                      [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor] 
+                      [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
                              | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
 
     pi = 4d * atan(1d);
     /* spectral_radius approx 1, so log is not stable */
-    log_spectral_radius = log1p(-2d * sin(pi * small_h) / 
+    log_spectral_radius = log1p(-2d * sin(pi * small_h) /
                                     (1d + sin(pi * small_h)));
     /* Larger constant because convergence deteriorates significantly if omega
        is not exactly optimal, and we do have roundoff errors. */
@@ -308,19 +308,19 @@ fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
       small_n *= 2;
       small_h /= 2d;
       factor  /= 2;
-  
-      small_F_black = {[i, j] -> F_black[i * factor, j * factor] 
+
+      small_F_black = {[i, j] -> F_black[i * factor, j * factor]
                               | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
                        [i, j] -> F_black[i * factor, (n - factor) / 2 - j * factor]
                               | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
       small_F_red   = {[i, j] -> F_black[i * factor, (2 * j + 1) * factor / 2]
                                | [0, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1];
-                        [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor] 
+                        [i, j] -> F_black[i * factor, n / 2 - (j + 1) * factor]
                                | [1, 0] <= [i, j] < [small_n, small_n / 2] step [2, 1]};
 
       U_red, U_black = prolongate_rb(U_red, U_black);
-      U_red, U_black = v_cycle(U_red, U_black, 
-                               small_F_red, small_F_black, 
+      U_red, U_black = v_cycle(U_red, U_black,
+                               small_F_red, small_F_black,
                                small_h);
     } while (small_n < n / 2);
 
@@ -332,6 +332,8 @@ fmg(double[n, n2] F_red, double[n, n2] F_black, double h)
 
 int main()
 {
+  N = String::toi(argv(argc() - 1));
+
   i_init = getInterval("init", 2);
 
   start(i_init);
@@ -360,7 +362,7 @@ int main()
   // FIXME: We should not be able to do 45 GB on a 32 GB machine.
   // Is there swap? Does SaC do some kind of crazy reuse?
   gb_needed = 1.333 * 4d * 8d * tod(n) * tod(n) * 1e-9;
-  fprintf(stderr, "Solving %lf GB at effective bandwidth %lf GB/s (%lf %s).\n", 
+  fprintf(stderr, "Solving %lf GB at effective bandwidth %lf GB/s (%lf %s).\n",
           gb_needed,
           gb_needed / time,
           time,
@@ -370,8 +372,8 @@ int main()
   Utrue = {[i, j] -> u(a + tod(i) * h, a + tod(j) * h)
                   | [i, j] < [n, n]};
   Utrue_red, Utrue_black = to_red_black(Utrue);
-  fprintf(stderr, "Actual relative error %e\n", 
-                L2_rb(U_red - Utrue_red, U_black - Utrue_black) / 
+  fprintf(stderr, "Actual relative error %e\n",
+                L2_rb(U_red - Utrue_red, U_black - Utrue_black) /
                   L2_rb(Utrue_red, Utrue_black));
 
   return 0;
