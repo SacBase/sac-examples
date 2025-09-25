@@ -14,14 +14,16 @@ seq: \
 	bin/quickhull_seq \
 	bin/stencil_seq
 
-check: bin/flash_check \
+check: \
+	bin/flash_check \
 	bin/fmg_check \
 	bin/mandelbrot_check \
 	bin/matmul_check \
 	bin/quickhull_check \
 	bin/stencil_check
 
-mt: bin/flash_mt \
+mt: \
+	bin/flash_mt \
 	bin/fmg_mt \
 	bin/mandelbrot_mt \
 	bin/matmul_mt \
