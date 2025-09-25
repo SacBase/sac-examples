@@ -9,5 +9,7 @@ jobs:
       image: sacbase/sac-compiler
     steps:
       - uses: actions/checkout@v5
-      - run: mv /root/.sac2crc $HOME/.sac2crc
-      - run: ./test.sh
+      - run: |
+          mv /root/.sac2crc $HOME/.sac2crc
+          make all
+          ./test.sh
