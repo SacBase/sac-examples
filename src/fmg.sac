@@ -11,11 +11,8 @@
  ******************************************************************************/
 use Math: all;
 use Array: all;
+use CommandLine: all;
 use StdIO: all;
-
-#ifndef N
-#define N 2048
-#endif
 
 double f(double x, double y)
 {
@@ -315,6 +312,9 @@ double[n,n2], double[n,n2] fmg(double[n,n2] F_red, double[n,n2] F_black, double 
 
 int main()
 {
+    // Count from the back because there may be cmdline arguments such as `-mt`
+    N = String::toi(argv(argc() - 1));
+
     a = 0d;
     b = 2d * pi();
     h = (b - a) / tod(N);

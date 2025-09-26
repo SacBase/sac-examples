@@ -1,12 +1,12 @@
 use Math: all;
 use Array: all;
+use CommandLine: all;
 use StdIO: all;
 
-#ifndef N
-#define N 1000000
+#ifndef BLOCK
+#define BLOCK 64
 #endif
 
-#define BLOCK 64
 #define DBL_MAX 1.79769e+308
 
 inline
@@ -201,19 +201,19 @@ double[N,2], int, double[N,2] FindHull(double[N,2] P, int lo, int hi, double[2] 
     return (P, count, hull);
 }
 
-double[N,2] CreateCircle()
+double[N,2] CreateCircle(int N)
 {
     return { [i] -> [cos(tod(2 * i) * pi() / tod(N)), sin(tod(2 * i) * pi() / tod(N))]
            | [i] < [N] };
 }
 
-double[N,2] CreateQuad()
+double[N,2] CreateQuad(int N)
 {
     return { [i] -> [tod(i) / tod(N), (tod(i) / tod(N)) * (tod(i) / tod(N))]
            | [i] < [N] };
 }
 
-double[N,2] CreateHyperbola(double A)
+double[N,2] CreateHyperbola(int N, double A)
 {
     return { [i] -> [tod(i + 1) / tod(N), tod(N) * A / tod(i + 1)]
            | [i] < [N] };
@@ -221,7 +221,10 @@ double[N,2] CreateHyperbola(double A)
 
 int main()
 {
-    P = CreateCircle();
+    // Count from the back because there may be cmdline arguments such as `-mt`
+    N = String::toi(argv(argc() - 1));
+
+    P = CreateCircle(N);
 
     sec1, nsec1 = MTClock::gettime();
 

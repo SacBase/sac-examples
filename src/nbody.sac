@@ -1,17 +1,10 @@
 #define OVERLOADED +,-,*
 use Array: all except { OVERLOADED };
 import Array: { OVERLOADED };
+use CommandLine: all;
 use StdIO: all;
 
 #define EPSILON 0x1p-53
-
-#ifndef N
-#define N 1000
-#endif
-
-#ifndef ITER
-#define ITER 100
-#endif
 
 struct Body {
    struct Vec3d pos;
@@ -92,6 +85,10 @@ struct Body[n] timestep(struct Body[n] bodies, double dt)
 
 int main()
 {
+    // Count from the back because there may be cmdline arguments such as `-mt`
+    N = String::toi(argv(argc() - 2));
+    I = String::toi(argv(argc() - 1));
+
     bodies = { [i] -> Body { .pos = Vec3d{ tod(i), tod(2*i), tod(3*i) },
                              .vel = Vec3d{},
                              .mass = 1d }

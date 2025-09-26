@@ -1,13 +1,6 @@
 use Array: all;
+use CommandLine: all;
 use StdIO: all;
-
-#ifndef N
-#define N 1000
-#endif
-
-#ifndef ITER
-#define ITER 100
-#endif
 
 specialize double[.,.] stencil(double[.,.] arr, double[3,3] w);
 
@@ -23,6 +16,10 @@ double[2:shp] stencil(double[2:shp] arr, double[n,n] w)
 
 int main()
 {
+    // Count from the back because there may be cmdline arguments such as `-mt`
+    N = String::toi(argv(argc() - 2));
+    I = String::toi(argv(argc() - 1));
+
     arr = tod(reshape([N,N], iota(N*N)));
 
     w = [[1.0, 2.0, 1.0],
@@ -32,7 +29,7 @@ int main()
 
     sec1, nsec1 = MTClock::gettime();
 
-    for (i = 0; i < ITER; i += 1) {
+    for (i = 0; i < I; i += 1) {
         arr = stencil(arr, w);
     }
 

@@ -1,29 +1,29 @@
 #!/bin/bash
 
-./bin/flash
-./bin/flash_p
-./bin/flash_mt -mt 4
+./bin/flash 2048 128
+./bin/flash_p 1024 64
+./bin/flash_mt -mt 4 2048 128
 
-./bin/fmg
-#./bin/fmg_p
-./bin/fmg_mt -mt 4
+./bin/fmg 2048
+#./bin/fmg_p 1024
+./bin/fmg_mt -mt 4 2048
 
-./bin/mandelbrot
-./bin/mandelbrot_p
-./bin/mandelbrot_mt -mt 4
+./bin/mandelbrot 1920 1080
+./bin/mandelbrot_p 1280 720
+./bin/mandelbrot_mt -mt 4 1920 1080
 
-./bin/matmul
-./bin/matmul_p
-./bin/matmul_mt -mt 4
+./bin/matmul 1000
+./bin/matmul_p 500
+./bin/matmul_mt -mt 4 1000
 
-./bin/nbody
-#./bin/nbody_p
-./bin/nbody_mt -mt 4
+./bin/nbody 1000 100
+#./bin/nbody_p 100 100
+./bin/nbody_mt -mt 4 1000 100
 
-./bin/quickhull
-./bin/quickhull_p
-./bin/quickhull_mt -mt 4
+./bin/quickhull 1000000
+./bin/quickhull_p 100000
+./bin/quickhull_mt -mt 4 1000000
 
-./bin/stencil
-./bin/stencil_p
-./bin/stencil_mt -mt 4
+./bin/stencil 1000 100
+./bin/stencil_p 100 100
+./bin/stencil_mt -mt 4 1000 100

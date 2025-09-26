@@ -1,9 +1,6 @@
 use Array: all;
+use CommandLine: all;
 use StdIO: all;
-
-#ifndef N
-#define N 1000
-#endif
 
 noinline
 double[m,n] matmul(double[m,k] a, double[k,n] b)
@@ -16,6 +13,9 @@ double[m,n] matmul(double[m,k] a, double[k,n] b)
 
 int main()
 {
+    // Count from the back because there may be cmdline arguments such as `-mt`
+    N = String::toi(argv(argc() - 1));
+
     a = tod(reshape([N,N], iota(N*N)));
     b = tod(reshape([N,N], iota(N*N)));
 
