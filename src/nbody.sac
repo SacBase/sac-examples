@@ -1,3 +1,9 @@
+/*
+SEQ 1000 100
+-CHECK 500 100
+MT 1000 100
+*/
+
 #define OVERLOADED +,-,*
 use Array: all except { OVERLOADED };
 import Array: { OVERLOADED };

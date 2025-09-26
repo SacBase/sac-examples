@@ -1,3 +1,9 @@
+/*
+SEQ 10000
+CHECK 5000
+MT 10000
+*/
+
 use Math: all;
 use Array: all;
 use CommandLine: all;

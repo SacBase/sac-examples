@@ -1,3 +1,9 @@
+/*
+SEQ 1920 1080
+CHECK 1280 720
+MT 1920 1080
+*/
+
 use Structures: all;
 use CommandLine: all;
 use StdIO: all;

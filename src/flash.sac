@@ -1,3 +1,9 @@
+/*
+SEQ 2048 128
+CHECK 1024 64
+MT 2048 128
+*/
+
 use Array: all;
 use CommandLine: all;
 use StdIO: all;

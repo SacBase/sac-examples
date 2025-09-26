@@ -1,3 +1,9 @@
+/*
+SEQ 2048
+-CHECK 1024
+MT 2048
+*/
+
 /******************************************************************************
  *
  * This solves
@@ -9,6 +15,7 @@
  * overrelaxation, red-black ordering.
  *
  ******************************************************************************/
+
 use Math: all;
 use Array: all;
 use CommandLine: all;
@@ -333,8 +340,7 @@ int main()
 
     Utrue = { [i,j] -> u(a + tod(i) * h, a + tod(j) * h) | [i,j] < [N,N] };
     Utrue_red, Utrue_black = to_red_black(Utrue);
-    err = L2_rb(U_red - Utrue_red, U_black - Utrue_black)
-        / L2_rb(Utrue_red, Utrue_black);
+    err = L2_rb(U_red - Utrue_red, U_black - Utrue_black) / L2_rb(Utrue_red, Utrue_black);
     printf("Relative error %e\n", err);
 
     return 0;

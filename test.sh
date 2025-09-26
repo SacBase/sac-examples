@@ -1,29 +1,38 @@
 #!/bin/bash
 
-./bin/flash 2048 128
-./bin/flash_p 1024 64
-./bin/flash_mt -mt 4 2048 128
+MT=${MT:-4}
 
-./bin/fmg 2048
-#./bin/fmg_p 1024
-./bin/fmg_mt -mt 4 2048
+test()
+{
+    args=$(grep '^SEQ' src/$1.sac | sed -e "s/^SEQ //")
+    if [ -n "$args" ]; then
+        echo "=== Testing $1 SEQ with input: $args ==="
+        ./bin/$1 $args
+    else
+        echo "=== Skipping $1 SEQ ==="
+    fi
 
-./bin/mandelbrot 1920 1080
-./bin/mandelbrot_p 1280 720
-./bin/mandelbrot_mt -mt 4 1920 1080
+    args=$(grep '^CHECK' src/$1.sac | sed -e "s/^CHECK //")
+    if [ -n "$args" ]; then
+        echo "=== Testing $1 CHECK with input: $args ==="
+        ./bin/$1_p $args
+    else
+        echo "=== Skipping $1 CHECK ==="
+    fi
 
-./bin/matmul 1000
-./bin/matmul_p 500
-./bin/matmul_mt -mt 4 1000
+    args=$(grep '^MT' src/$1.sac | sed -e "s/^MT //")
+    if [ -n "$args" ]; then
+        echo "== Testing $1 MT with input: $args ==="
+        ./bin/$1 $args
+    else
+        echo "=== Skipping $1 MT ==="
+    fi
+}
 
-./bin/nbody 1000 100
-#./bin/nbody_p 100 100
-./bin/nbody_mt -mt 4 1000 100
-
-./bin/quickhull 100000
-./bin/quickhull_p 10000
-./bin/quickhull_mt -mt 4 100000
-
-./bin/stencil 1000 100
-./bin/stencil_p 100 100
-./bin/stencil_mt -mt 4 1000 100
+test flash
+test fmg
+test mandelbrot
+test matmul
+test nbody
+test quickhull
+test stencil

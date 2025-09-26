@@ -1,3 +1,9 @@
+/*
+SEQ 1000 100
+CHECK 250 100
+MT 1000 100
+*/
+
 use Array: all;
 use CommandLine: all;
 use StdIO: all;
