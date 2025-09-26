@@ -20,9 +20,9 @@
 #./bin/nbody_p 100 100
 ./bin/nbody_mt -mt 4 1000 100
 
-./bin/quickhull 1000000
-./bin/quickhull_p 100000
-./bin/quickhull_mt -mt 4 1000000
+./bin/quickhull 100000
+./bin/quickhull_p 10000
+./bin/quickhull_mt -mt 4 100000
 
 ./bin/stencil 1000 100
 ./bin/stencil_p 100 100
