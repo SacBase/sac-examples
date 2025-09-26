@@ -96,7 +96,7 @@ int main()
 
     sec1, nsec1 = MTClock::gettime();
 
-    for (i = 0; i < ITER; i += 1) {
+    for (i = 0; i < I; i += 1) {
         bodies = timestep(bodies, 0.01);
     }
 
