@@ -5,30 +5,30 @@ FLAGS = -maxwlur 9 -maxwlmp 1
 
 all: seq check mt
 
-seq: \
-	bin/flash \
-	bin/fmg \
-	bin/mandelbrot \
-	bin/matmul \
-	bin/nbody \
-	bin/quickhull \
+seq:                  \
+	bin/flash         \
+	bin/fmg           \
+	bin/mandelbrot    \
+	bin/matmul        \
+	bin/nbody         \
+	bin/quickhull     \
 	bin/stencil
 
-check: \
-	bin/flash_p \
-	bin/fmg_p \
-	bin/mandelbrot_p \
-	bin/matmul_p \
-	bin/quickhull_p \
+check:                \
+	bin/flash_p       \
+	bin/fmg_p         \
+	bin/mandelbrot_p  \
+	bin/matmul_p      \
+	bin/quickhull_p   \
 	bin/stencil_p
 
-mt: \
-	bin/flash_mt \
-	bin/fmg_mt \
+mt:                   \
+	bin/flash_mt      \
+	bin/fmg_mt        \
 	bin/mandelbrot_mt \
-	bin/matmul_mt \
-	bin/nbody_mt \
-	bin/quickhull_mt \
+	bin/matmul_mt     \
+	bin/nbody_mt      \
+	bin/quickhull_mt  \
 	bin/stencil_mt
 
 bin/%: src/%.sac
