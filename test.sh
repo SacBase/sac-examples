@@ -23,7 +23,7 @@ test()
     args=$(grep '^MT' src/$1.sac | sed -e "s/^MT //")
     if [ -n "$args" ]; then
         echo "== Testing $1 MT with input: $args ==="
-        ./bin/$1 $args
+        SAC_PARALLEL=$MT ./bin/$1_mt $args
     else
         echo "=== Skipping $1 MT ==="
     fi
