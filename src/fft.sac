@@ -1,0 +1,53 @@
+/*
+SEQ 16 2
+CHECK 16 2
+MT 16 2
+*/
+
+use Math: all;
+use Structures: all;
+use CommandLine: all;
+use StdIO: all;
+
+complex omega(int j, int n)
+{
+    angle = -2.0 * pi() * tod(j) / tod(n);
+    return toc(cos(angle), sin(angle));
+}
+
+complex[n] DFT(complex[n] x)
+{
+    return { [k] -> sum({ [j] -> x[j] * omega(k * j, n) })
+           | [k] < [n] };
+}
+
+complex[m,r] FFT_2D(complex[r,m] X)
+{
+    n = r * m;
+    W = { [., s] -> DFT(X[., s]) };
+    V = { [t, s] -> omega(s * t, n) * W[t, s] };
+    Z = { [s, t] -> W[t, s] };
+    Y = { [., t] -> DFT(Z[., t]) };
+    return Y;
+}
+
+int main()
+{
+    m = String::toi(argv(1));
+    r = String::toi(argv(2));
+    frequency = 3;
+    n = m * r;
+
+    x = { [j] -> toc(cos(2d * pi() * tod(j) * tod(frequency) / tod(n)), 0d)
+        | [j] < [n] };
+
+    sec1, nsec1 = MTClock::gettime();
+
+    y = FFT_2D(reshape([m, r], x));
+
+    sec2, nsec2 = MTClock::gettime();
+    printf("This took %fs\n", MTClock::timediff(sec1, nsec1, sec2, nsec2));
+    printf("sum is %f\n", sum((double[+])y));
+
+    return 0;
+}

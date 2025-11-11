@@ -22,9 +22,8 @@ double[2:shp] stencil(double[2:shp] arr, double[n,n] w)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    N = String::toi(argv(argc() - 2));
-    I = String::toi(argv(argc() - 1));
+    N = String::toi(argv(1));
+    I = String::toi(argv(2));
 
     arr = tod(reshape([N,N], iota(N*N)));
 

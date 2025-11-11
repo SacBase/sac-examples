@@ -57,9 +57,8 @@ double[2:shp] normalizeValues(int[2:shp] ts, complex[2:shp] vs)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    XRES = String::toi(argv(argc() - 2));
-    YRES = String::toi(argv(argc() - 1));
+    XRES = String::toi(argv(1));
+    YRES = String::toi(argv(2));
 
     arr = genComplexArray(XRES, YRES, toc(-2.2, 1.0), toc(0.8, -1.0));
 

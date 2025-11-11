@@ -19,8 +19,7 @@ double[m,n] matmul(double[m,k] a, double[k,n] b)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    N = String::toi(argv(argc() - 1));
+    N = String::toi(argv(1));
 
     a = tod(reshape([N,N], iota(N*N)));
     b = tod(reshape([N,N], iota(N*N)));
