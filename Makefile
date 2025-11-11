@@ -6,6 +6,7 @@ FLAGS = -maxwlur 9 -maxwlmp 1
 all: seq check mt
 
 seq:                  \
+	bin/fft			  \
 	bin/flash         \
 	bin/fmg           \
 	bin/mandelbrot    \
@@ -15,6 +16,7 @@ seq:                  \
 	bin/stencil
 
 check:                \
+	bin/fft_p    	  \
 	bin/flash_p       \
 	bin/fmg_p         \
 	bin/mandelbrot_p  \
@@ -23,6 +25,7 @@ check:                \
 	bin/stencil_p
 
 mt:                   \
+	bin/fft_mt		  \
 	bin/flash_mt      \
 	bin/fmg_mt        \
 	bin/mandelbrot_mt \

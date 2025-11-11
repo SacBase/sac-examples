@@ -227,8 +227,7 @@ double[N,2] CreateHyperbola(int N, double A)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    N = String::toi(argv(argc() - 1));
+    N = String::toi(argv(1));
 
     P = CreateCircle(N);
 
