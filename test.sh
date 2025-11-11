@@ -29,6 +29,7 @@ test()
     fi
 }
 
+test fft
 test flash
 test fmg
 test mandelbrot

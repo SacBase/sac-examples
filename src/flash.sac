@@ -51,9 +51,8 @@ float[nd,d,d] FlashAttention(float[nd,d,d] Q, float[n,d] K, float[n,d] V)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    N = String::toi(argv(argc() - 2));
-    D = String::toi(argv(argc() - 1));
+    N = String::toi(argv(1));
+    D = String::toi(argv(2));
 
     Q = { [i,j,k] -> 1f / (1f + tof(i)) | [i,j,k] < [N/D,D,D] };
     K = { [i,j] -> 1f | [i,j] < [N,D] };

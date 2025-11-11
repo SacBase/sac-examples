@@ -91,9 +91,8 @@ struct Body[n] timestep(struct Body[n] bodies, double dt)
 
 int main()
 {
-    // Count from the back because there may be cmdline arguments such as `-mt`
-    N = String::toi(argv(argc() - 2));
-    I = String::toi(argv(argc() - 1));
+    N = String::toi(argv(1));
+    I = String::toi(argv(2));
 
     bodies = { [i] -> Body { .pos = Vec3d{ tod(i), tod(2*i), tod(3*i) },
                              .vel = Vec3d{},
