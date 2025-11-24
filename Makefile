@@ -16,7 +16,6 @@ seq:                  \
 	bin/stencil
 
 check:                \
-	bin/fft_p    	  \
 	bin/flash_p       \
 	bin/fmg_p         \
 	bin/mandelbrot_p  \
